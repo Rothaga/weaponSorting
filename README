@@ -1,0 +1,4 @@
+To make:
+Type make
+
+To run: ./csgo weapons.txt your_inventory.txt
