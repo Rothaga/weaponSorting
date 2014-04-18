@@ -106,7 +106,7 @@ int main(int argc, char * argv[])
 		}
 	}
 	ofstream ofile(inventory);
-	for(unsigned int i = 1; i < allUserSkins.size();i++)
+	for(unsigned int i = 0; i < allUserSkins.size();i++)
 	{
 			ofile << userSkins[i] << "\r\n"; //Just "\n" for linux
 	}
