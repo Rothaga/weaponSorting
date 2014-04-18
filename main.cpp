@@ -21,6 +21,11 @@ int main(int argc, char * argv[])
 	string key = "";
 	vector<string> skins;
 	vector<Case> caseList;
+	if(ifile.fail())
+	{
+		cout << "Unable to open Weapon Database" << endl;
+		return 1;
+	}
 	while(!ifile.eof()) //Read in the database
 	{
 		string type;
@@ -47,6 +52,11 @@ int main(int argc, char * argv[])
 	}
 	ifile.close();
 	ifile.open(inventory);
+	if(ifile.fail())
+	{
+		cout << "Unable to open User inventory" << endl;
+		return 2;
+	}
 	vector<string> allUserSkins;
 	while(!ifile.eof())//Read in the users inventory
 	{
