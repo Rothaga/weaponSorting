@@ -25,6 +25,13 @@ struct caseComp
 		return case1.weapons <= case2.weapons;
 	}
 };
+struct stringComp
+{
+	bool operator()(const string& case1, const string& case2)
+	{
+		return case1 <= case2;
+	}
+};
 struct intComp
 {
 	bool operator()(const int& student1, const int& student2)

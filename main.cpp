@@ -47,10 +47,12 @@ int main(int argc, char * argv[])
 	}
 	ifile.close();
 	ifile.open(inventory);
+	vector<string> allUserSkins;
 	while(!ifile.eof())//Read in the users inventory
 	{
 		string skin;
 		ifile >> skin;
+		allUserSkins.push_back(skin);
 		for(unsigned int i = 0; i < caseList.size(); i++)
 		{
 			vector<string>possibleMatches = lookup[caseList[i].name];
@@ -66,13 +68,21 @@ int main(int argc, char * argv[])
 	}
 	ifile.close();
 	Case* cases = new Case[caseList.size()];
+	string* userSkins = new string[allUserSkins.size()];
 	for(unsigned int i = 0; i < caseList.size();i++)
 	{
 		cases[i] = caseList[i];
 	}
+	for(unsigned int i = 0; i < allUserSkins.size();i++)
+	{
+		userSkins[i] = allUserSkins[i];
+	}
 	caseComp compare;
+	stringComp strcompare;
 	QuickSort<Case,caseComp> sort;
+	QuickSort<string,stringComp> stringsort;
 	cases = sort.randomQuickSort(cases,caseList.size(),compare);
+	userSkins = stringsort.randomQuickSort(userSkins,allUserSkins.size(),strcompare);
 	for(unsigned int i = 0; i < caseList.size(); i++)
 	{
 		if(cases[caseList.size() -1 -i].weapons > 2)
@@ -85,6 +95,14 @@ int main(int argc, char * argv[])
 			cout << endl;
 		}
 	}
+	ofstream ofile(inventory);
+	for(unsigned int i = 1; i < allUserSkins.size();i++)
+	{
+			ofile << userSkins[i] << "\r\n"; //Just "\n" for linux
+	}
+	ofile.close();
+	delete [] userSkins;
+	delete [] cases;
 }
 
 
