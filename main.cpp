@@ -15,9 +15,8 @@ using namespace std;
 int main(int argc, char * argv[])
 {
 	map<string,vector<string> > lookup;
-	char* dataBase = argv[1];
-	char* inventory = argv[2];
-	ifstream ifile(dataBase);
+	char* inventory = argv[1];
+	ifstream ifile("database.txt");
 	string key = "";
 	vector<string> skins;
 	vector<Case> caseList;
