@@ -15,7 +15,6 @@ using namespace std;
 int main(int argc, char * argv[])
 {
 	map<string,vector<string> > lookup;
-	char* inventory = argv[1];
 	ifstream ifile("database.txt");
 	string key = "";
 	vector<string> skins;
@@ -50,7 +49,7 @@ int main(int argc, char * argv[])
 		}
 	}
 	ifile.close();
-	ifile.open(inventory);
+	ifile.open("inventory.txt");
 	if(ifile.fail())
 	{
 		cout << "Unable to open User inventory" << endl;
@@ -104,7 +103,7 @@ int main(int argc, char * argv[])
 			cout << endl;
 		}
 	}
-	ofstream ofile(inventory);
+	ofstream ofile("inventory.txt");
 	for(unsigned int i = 0; i < allUserSkins.size();i++)
 	{
 			ofile << userSkins[i] << "\r\n"; //Just "\n" for linux
