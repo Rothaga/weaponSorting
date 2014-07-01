@@ -5,20 +5,30 @@
  *      Author: shist_000
  */
 #include <iostream>
+#include <cstdlib>
+#include <sstream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <map>
-#include "lib/quicksort.h"
+#include <exception>
 using namespace std;
-
+//Converts a number to a string
+//Returns a string
+string toString(int number)
+{
+	stringstream ss;
+	ss << number;
+	return ss.str();
+}
 int main(int argc, char * argv[])
 {
+	ifstream ifile(argv[1]); //Load Database
+	vector<string> caseWeapons, caseList;
+	vector<string> userWeapons;
+	string caseName = "";
+	string uniqueId = "";
 	map<string,vector<string> > lookup;
-	ifstream ifile("database.txt");
-	string key = "";
-	vector<string> skins;
-	vector<Case> caseList;
 	if(ifile.fail())
 	{
 		cout << "Unable to open Weapon Database" << endl;
@@ -26,91 +36,83 @@ int main(int argc, char * argv[])
 	}
 	while(!ifile.eof()) //Read in the database
 	{
-		string type;
-		ifile >> type;
-		if(type == "~")
+		string isCase;
+		int quality;
+		ifile >> isCase;
+		if(isCase == "~")
 		{
-			if(key != "")
+			//Reached new Case,
+			// push back the list of weapons and 
+			//get ready for new inputs
+			if(uniqueId != "") 
 			{
-				lookup[key] = skins;
-				skins.clear();
+				lookup[uniqueId] = caseWeapons;
+				caseWeapons.clear();
 			}
-			ifile >> key;
-			Case buff;
-			buff.name = key;
-			buff.weapons = 0;
-			caseList.push_back(buff);
+			ifile >> caseName >> quality;
+			uniqueId = caseName + toString(quality);
+			caseList.push_back(uniqueId);
 		}
-		else if(type == "!")
+		else if(isCase == "!")
 		{
 			string skin;
 			ifile >> skin;
-			skins.push_back(skin);
+			caseWeapons.push_back(skin);
 		}
 	}
 	ifile.close();
-	ifile.open("inventory.txt");
-	if(ifile.fail())
+	ifile.open(argv[2]);
+	while(!ifile.eof()) // Read in User provided weapons
 	{
-		cout << "Unable to open User inventory" << endl;
-		return 2;
+		string weaponInput;
+		ifile >> weaponInput;
+		userWeapons.push_back(weaponInput);
 	}
-	vector<string> allUserSkins;
-	while(!ifile.eof())//Read in the users inventory
+	ifile.close();
+	//Calculate what type of quality from first skin
+	string firstCaseName;
+	vector<string> userCases;
+	for(int h = 0; h < userWeapons.size(); h++)
 	{
-		string skin;
-		ifile >> skin;
-		allUserSkins.push_back(skin);
-		for(unsigned int i = 0; i < caseList.size(); i++)
+		for(int i = 0; i < caseList.size();i++)
 		{
-			vector<string>possibleMatches = lookup[caseList[i].name];
-			for(unsigned int j = 0; j < possibleMatches.size(); j++)
+			vector<string> currCase = lookup[caseList[i]];
+			for(int j = 0; j < currCase.size(); j++)
 			{
-				if(skin == possibleMatches[j])
+				if(currCase[j] == userWeapons[0])
+					firstCaseName = caseList[i];
+				if(currCase[j] == userWeapons[h])
 				{
-					caseList[i].userWeapons.push_back(skin);
-					caseList[i].weapons++;
-				}
+					string temp = caseList[i];
+					temp = temp.substr(0,temp.length()-1);
+					userCases.push_back(temp);
+				}	
 			}
 		}
 	}
-	ifile.close();
-	Case* cases = new Case[caseList.size()];
-	string* userSkins = new string[allUserSkins.size()];
-	for(unsigned int i = 0; i < caseList.size();i++)
+	int firstQuality = firstCaseName[firstCaseName.length() - 1] - '0';//convert the char into an int;
+	cout << "Possible Weapon Outcomes:" << endl;
+	for(int i = 0; i < userCases.size(); i++)
 	{
-		cases[i] = caseList[i];
-	}
-	for(unsigned int i = 0; i < allUserSkins.size();i++)
-	{
-		userSkins[i] = allUserSkins[i];
-	}
-	caseComp compare;
-	stringComp strcompare;
-	QuickSort<Case,caseComp> sort;
-	QuickSort<string,stringComp> stringsort;
-	cases = sort.randomQuickSort(cases,caseList.size(),compare);
-	userSkins = stringsort.randomQuickSort(userSkins,allUserSkins.size(),strcompare);
-	for(unsigned int i = 0; i < caseList.size(); i++)
-	{
-		if(cases[caseList.size() -1 -i].weapons > 2)
+		try
 		{
-			cout << "Case/Quality: " << cases[caseList.size() -1 -i].name  << endl;
-			cout << "Num of Weapons: " << cases[caseList.size() -1 -i].weapons << endl;
-			cout << "Weapons: " << endl;
-			for(unsigned int j = 0; j < cases[caseList.size() -1 -i].userWeapons.size();j++)
-				cout << cases[caseList.size() -1 -i].userWeapons[j] << endl;
-			cout << endl;
+			string name = userCases[i] + toString(firstQuality+1);
+			vector<string> outcomes = lookup[name];
+			for(int j = 0; j< outcomes.size(); j++)
+			{
+				cout << outcomes[j] << endl;
+			}
 		}
+		catch(exception &e)
+		{
+			cout << "Invalid Combination" << endl;
+		}
+		
 	}
-	ofstream ofile("inventory.txt");
-	for(unsigned int i = 0; i < allUserSkins.size();i++)
-	{
-			ofile << userSkins[i] << "\r\n"; //Just "\n" for linux
-	}
-	ofile.close();
-	delete [] userSkins;
-	delete [] cases;
+	/*
+	vector<string> skins = lookup["Italy1"];
+	for(int i = 0; i < skins.size(); i++)
+		cout << skins[i] << endl;*/
 }
 
 
