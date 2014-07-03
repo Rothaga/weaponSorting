@@ -2,17 +2,26 @@
  * main.cpp
  *
  *  Created on: Apr 17, 2014
- *      Author: shist_000
+ *      Author: Allen Shi
  */
+ //Input output streams
 #include <iostream>
-#include <cstdlib>
 #include <sstream>
 #include <fstream>
+
+ //Data structures
 #include <string>
 #include <vector>
 #include <map>
+
+ //Errors
 #include <exception>
 using namespace std;
+
+//GUI
+#include <QApplication>
+//#include "MainWindow.h"
+
 //Converts a number to a string
 //Returns a string
 string toString(int number)
@@ -23,7 +32,8 @@ string toString(int number)
 }
 int main(int argc, char * argv[])
 {
-	ifstream ifile(argv[1]); //Load Database
+	QApplication app(argc, argv);
+	ifstream ifile("database.txt"); //Load Database
 	vector<string> caseWeapons, caseList;
 	vector<string> userWeapons;
 	string caseName = "";
@@ -53,7 +63,7 @@ int main(int argc, char * argv[])
 			uniqueId = caseName + toString(quality);
 			caseList.push_back(uniqueId);
 		}
-		else if(isCase == "!")
+		else if(isCase == "!") //Adding a skin to a case
 		{
 			string skin;
 			ifile >> skin;
@@ -61,7 +71,7 @@ int main(int argc, char * argv[])
 		}
 	}
 	ifile.close();
-	ifile.open(argv[2]);
+	ifile.open("weapons.txt");
 	while(!ifile.eof()) // Read in User provided weapons
 	{
 		string weaponInput;
@@ -90,8 +100,9 @@ int main(int argc, char * argv[])
 			}
 		}
 	}
+	ofstream ofile("upgrade.txt");
+	//Add weaponQuality to the end of the casename to figure out next tier weapons
 	int firstQuality = firstCaseName[firstCaseName.length() - 1] - '0';//convert the char into an int;
-	cout << "Possible Weapon Outcomes:" << endl;
 	for(int i = 0; i < userCases.size(); i++)
 	{
 		try
@@ -100,19 +111,14 @@ int main(int argc, char * argv[])
 			vector<string> outcomes = lookup[name];
 			for(int j = 0; j< outcomes.size(); j++)
 			{
-				cout << outcomes[j] << endl;
+				ofile << outcomes[j] << endl;
 			}
 		}
 		catch(exception &e)
 		{
-			cout << "Invalid Combination" << endl;
 		}
-		
 	}
-	/*
-	vector<string> skins = lookup["Italy1"];
-	for(int i = 0; i < skins.size(); i++)
-		cout << skins[i] << endl;*/
+	ofile.close();
 }
 
 
