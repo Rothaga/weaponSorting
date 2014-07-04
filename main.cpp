@@ -34,6 +34,7 @@ int main(int argc, char * argv[])
 {
 	QApplication app(argc, argv);
 	MainWindow main("database.txt");
+	main.setWindowTitle("CS:GO Upgrade Calculator");
 	main.show();
 	/*ifstream ifile("database.txt"); //Load Database
 	vector<string> caseWeapons, caseList;
