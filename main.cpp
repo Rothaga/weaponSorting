@@ -20,20 +20,22 @@ using namespace std;
 
 //GUI
 #include <QApplication>
-//#include "MainWindow.h"
+#include "MainWindow.h"
 
 //Converts a number to a string
 //Returns a string
-string toString(int number)
+/*string toString(int number)
 {
 	stringstream ss;
 	ss << number;
 	return ss.str();
-}
+}*/
 int main(int argc, char * argv[])
 {
 	QApplication app(argc, argv);
-	ifstream ifile("database.txt"); //Load Database
+	MainWindow main("database.txt");
+	main.show();
+	/*ifstream ifile("database.txt"); //Load Database
 	vector<string> caseWeapons, caseList;
 	vector<string> userWeapons;
 	string caseName = "";
@@ -100,7 +102,7 @@ int main(int argc, char * argv[])
 			}
 		}
 	}
-	ofstream ofile("upgrade.txt");
+	/*ofstream ofile("upgrade.txt");
 	//Add weaponQuality to the end of the casename to figure out next tier weapons
 	int firstQuality = firstCaseName[firstCaseName.length() - 1] - '0';//convert the char into an int;
 	for(int i = 0; i < userCases.size(); i++)
@@ -118,7 +120,8 @@ int main(int argc, char * argv[])
 		{
 		}
 	}
-	ofile.close();
+	ofile.close();*/
+	return app.exec();
 }
 
 
