@@ -1,4 +1,2 @@
-To make:
-Type make
-
-To run: ./csgo weapons.txt your_inventory.txt
+Place the executable and database.txt in the folder you wish to run it. Then run the program.
+Note: Linux only so far.
