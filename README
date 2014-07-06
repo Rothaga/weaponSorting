@@ -1,2 +1,8 @@
+Author: Allen Shi
+
 Place the executable and database.txt in the folder you wish to run it. Then run the program.
-Note: Linux only so far.
+win_upgrade is for Windows, upgrade is for linux. 
+
+Usage:
+Select your weapons from the leftmost list, hit add weapon. Do not include duplicates. Remove weapons removes all your selections
+Hit the results to see the possible weapon upgrades you can get.
